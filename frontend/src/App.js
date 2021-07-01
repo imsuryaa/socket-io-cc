@@ -4,21 +4,31 @@ import io from "socket.io-client";
 import { nanoid } from "nanoid";
 
 const socket = io.connect("https://localhost:5000");
-
+const userName = nanoid(4)
 function App() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
-  
+
   const sendChat = (e) => {
-    e.preventDefault()
-    socket.emit("chat", {message})
-    setMessage("")
-  }
+    e.preventDefault();
+    socket.emit("chat", { message, userName });
+    setMessage("");
+  };
+
+  useEffect(() => {
+    socket.on("chat", (payload) => {
+      setChat([...chat, payload]);
+    });
+  });
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Socket.io application</h1>
+        {chat.map((payload, index) => {
+          return <p key={index}>{payload.message}: <span>id: {payload.userName}</span> </p>;
+        })}
+
         <form onSubmit={sendChat}>
           <input
             type="text"
