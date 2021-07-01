@@ -9,7 +9,7 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("what is scoket:", socket);
+  console.log("what is socket:", socket);
   console.log("socket is active");
 
   socket.on("chat", (payload) => {
